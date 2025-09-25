@@ -42,12 +42,11 @@ const messages = {
 
 // Get message with fallback
 function getMessage(key) {
-    // Try Chrome i18n first
-    let message = chrome.i18n.getMessage(key);
-    if (message) return message;
-    
-    // Fallback to local messages
-    return messages[currentLang][key] || messages.en[key] || key;
+    // Use local messages based on current language
+    // This ensures consistency when switching languages
+    return messages[currentLang] && messages[currentLang][key] 
+        ? messages[currentLang][key] 
+        : messages.en[key] || key;
 }
 
 // i18n localization
@@ -67,7 +66,15 @@ async function switchLanguage(lang) {
     
     // Update UI language
     localizeUI();
+    
+    // Update dynamic content
     updateUI();
+    
+    // Re-render domain list with new empty state message if needed
+    const domainList = document.getElementById('domainList');
+    if (domainList.querySelector('.empty-state')) {
+        domainList.innerHTML = `<div class="empty-state">${getMessage('emptyState')}</div>`;
+    }
     
     // Update language switcher buttons
     document.querySelectorAll('.lang-btn').forEach(btn => {
