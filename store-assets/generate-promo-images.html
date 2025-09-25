@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Chrome Web Store Promotional Images</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .canvas-container {
+            margin: 20px 0;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        canvas {
+            border: 1px solid #ddd;
+            display: block;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #5a67d8;
+        }
+        h2 {
+            color: #333;
+            margin-top: 30px;
+        }
+        .info {
+            background: #e6f2ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Chrome Web Store Promotional Images Generator</h1>
+        <div class="info">
+            <strong>Instructions:</strong> Click each button to generate and download the required promotional images for Chrome Web Store submission.
+        </div>
+
+        <!-- Small Promo Tile -->
+        <div class="canvas-container">
+            <h2>Small Promo Tile (440x280px)</h2>
+            <canvas id="smallPromo" width="440" height="280"></canvas>
+            <button onclick="downloadCanvas('smallPromo', 'small-promo-tile.png')">Download Small Promo Tile</button>
+        </div>
+
+        <!-- Large Promo Tile -->
+        <div class="canvas-container">
+            <h2>Large Promo Tile (920x680px)</h2>
+            <canvas id="largePromo" width="920" height="680"></canvas>
+            <button onclick="downloadCanvas('largePromo', 'large-promo-tile.png')">Download Large Promo Tile</button>
+        </div>
+
+        <!-- Marquee Promo -->
+        <div class="canvas-container">
+            <h2>Marquee Promo Tile (1400x560px)</h2>
+            <canvas id="marqueePromo" width="1400" height="560"></canvas>
+            <button onclick="downloadCanvas('marqueePromo', 'marquee-promo-tile.png')">Download Marquee Promo</button>
+        </div>
+
+        <!-- Screenshots -->
+        <div class="canvas-container">
+            <h2>Screenshot Template (1280x800px)</h2>
+            <canvas id="screenshot" width="1280" height="800"></canvas>
+            <button onclick="generateScreenshot(1)">Generate Screenshot 1 (Main UI)</button>
+            <button onclick="generateScreenshot(2)">Generate Screenshot 2 (Monitoring)</button>
+            <button onclick="generateScreenshot(3)">Generate Screenshot 3 (Export)</button>
+            <button onclick="generateScreenshot(4)">Generate Screenshot 4 (Domains)</button>
+            <button onclick="generateScreenshot(5)">Generate Screenshot 5 (Bilingual)</button>
+        </div>
+    </div>
+
+    <script>
+        // Draw gradient background
+        function drawGradientBg(ctx, width, height) {
+            const gradient = ctx.createLinearGradient(0, 0, width, height);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+        }
+
+        // Draw network icon
+        function drawNetworkIcon(ctx, x, y, size) {
+            ctx.strokeStyle = 'white';
+            ctx.fillStyle = 'white';
+            ctx.lineWidth = size * 0.06;
+            ctx.lineCap = 'round';
+            
+            // Center circle
+            ctx.beginPath();
+            ctx.arc(x, y, size * 0.1, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Outer ring
+            ctx.beginPath();
+            ctx.arc(x, y, size * 0.3, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            // Connection lines and nodes
+            const angles = [0, 120, 240];
+            angles.forEach(angle => {
+                const rad = angle * Math.PI / 180;
+                
+                // Lines
+                ctx.beginPath();
+                ctx.moveTo(
+                    x + size * 0.1 * Math.cos(rad),
+                    y + size * 0.1 * Math.sin(rad)
+                );
+                ctx.lineTo(
+                    x + size * 0.45 * Math.cos(rad),
+                    y + size * 0.45 * Math.sin(rad)
+                );
+                ctx.stroke();
+                
+                // Nodes
+                ctx.beginPath();
+                ctx.arc(
+                    x + size * 0.45 * Math.cos(rad),
+                    y + size * 0.45 * Math.sin(rad),
+                    size * 0.08, 0, Math.PI * 2
+                );
+                ctx.fill();
+            });
+        }
+
+        // Generate Small Promo Tile
+        function generateSmallPromo() {
+            const canvas = document.getElementById('smallPromo');
+            const ctx = canvas.getContext('2d');
+            
+            drawGradientBg(ctx, 440, 280);
+            
+            // Icon
+            drawNetworkIcon(ctx, 220, 100, 60);
+            
+            // Title
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 32px -apple-system, BlinkMacSystemFont, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('NetScope', 220, 180);
+            
+            // Subtitle
+            ctx.font = '16px -apple-system, BlinkMacSystemFont, sans-serif';
+            ctx.fillText('Network Request Monitor', 220, 210);
+            
+            // Badge
+            ctx.fillStyle = 'rgba(255,255,255,0.2)';
+            ctx.fillRect(150, 230, 140, 30);
+            ctx.fillStyle = 'white';
+            ctx.font = '12px -apple-system, BlinkMacSystemFont, sans-serif';
+            ctx.fillText('Chrome Extension', 220, 250);
+        }
+
+        // Generate Large Promo Tile
+        function generateLargePromo() {
+            const canvas = document.getElementById('largePromo');
+            const ctx = canvas.getContext('2d');
+            
+            drawGradientBg(ctx, 920, 680);
+            
+            // Large icon
+            drawNetworkIcon(ctx, 460, 200, 120);
+            
+            // Title
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 64px -apple-system, BlinkMacSystemFont, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('NetScope', 460, 380);
+            
+            // Subtitle
+            ctx.font = '28px -apple-system, BlinkMacSystemFont, sans-serif';
+            ctx.fillText('Network Request Monitor', 460, 430);
+            
+            // Features
+            ctx.font = '20px -apple-system, BlinkMacSystemFont, sans-serif';
+            const features = [
+                '🔍 Real-time Monitoring',
+                '📊 Domain Statistics', 
+                '🌐 Bilingual Support',
+                '📋 Export & Analysis'
+            ];
+            features.forEach((feature, i) => {
+                ctx.fillText(feature, 460, 500 + i * 35);
+            });
+        }
+
+        // Generate Marquee Promo
+        function generateMarqueePromo() {
+            const canvas = document.getElementById('marqueePromo');
+            const ctx = canvas.getContext('2d');
+            
+            drawGradientBg(ctx, 1400, 560);
+            
+            // Icon on left
+            drawNetworkIcon(ctx, 300, 280, 150);
+            
+            // Title and description on right
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 72px -apple-system, BlinkMacSystemFont, sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText('NetScope', 550, 200);
+            
+            ctx.font = '36px -apple-system, BlinkMacSystemFont, sans-serif';
+            ctx.fillText('Network Request Monitor', 550, 260);
+            
+            ctx.font = '24px -apple-system, BlinkMacSystemFont, sans-serif';
+            ctx.fillStyle = 'rgba(255,255,255,0.9)';
+            const lines = [
+                'Monitor all network requests in real-time',
+                'Analyze domain patterns and statistics',
+                'Export comprehensive reports'
+            ];
+            lines.forEach((line, i) => {
+                ctx.fillText(line, 550, 330 + i * 40);
+            });
+            
+            // Decorative elements
+            ctx.fillStyle = 'rgba(255,255,255,0.1)';
+            ctx.fillRect(1200, 100, 150, 150);
+            ctx.fillRect(1250, 300, 100, 100);
+        }
+
+        // Generate screenshots
+        function generateScreenshot(num) {
+            const canvas = document.getElementById('screenshot');
+            const ctx = canvas.getContext('2d');
+            
+            // Clear canvas
+            ctx.fillStyle = '#f5f5f5';
+            ctx.fillRect(0, 0, 1280, 800);
+            
+            // Browser frame
+            ctx.fillStyle = '#e5e7eb';
+            ctx.fillRect(0, 0, 1280, 80);
+            
+            // Browser controls
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(100, 20, 800, 40);
+            ctx.fillStyle = '#667eea';
+            ctx.fillRect(950, 20, 120, 40);
+            
+            // URL bar text
+            ctx.fillStyle = '#6b7280';
+            ctx.font = '14px monospace';
+            ctx.textAlign = 'left';
+            ctx.fillText('https://example.com', 120, 45);
+            
+            // Extension icon
+            ctx.fillStyle = 'white';
+            ctx.font = '14px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('NetScope', 1010, 45);
+            
+            // Main content area
+            switch(num) {
+                case 1: // Main UI
+                    drawMainUI(ctx);
+                    break;
+                case 2: // Monitoring
+                    drawMonitoring(ctx);
+                    break;
+                case 3: // Export
+                    drawExport(ctx);
+                    break;
+                case 4: // Domains
+                    drawDomains(ctx);
+                    break;
+                case 5: // Bilingual
+                    drawBilingual(ctx);
+                    break;
+            }
+            
+            // Download
+            downloadCanvas('screenshot', `screenshot-${num}.png`);
+        }
+
+        function drawMainUI(ctx) {
+            // Popup window
+            ctx.fillStyle = 'white';
+            ctx.fillRect(900, 100, 350, 500);
+            ctx.strokeStyle = '#e5e7eb';
+            ctx.strokeRect(900, 100, 350, 500);
+            
+            // Header
+            drawGradientBg(ctx, 350, 80);
+            ctx.save();
+            ctx.translate(900, 100);
+            ctx.fillRect(0, 0, 350, 80);
+            ctx.restore();
+            
+            // Title
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 20px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('🌐 Network Monitor', 1075, 145);
+            
+            // Buttons
+            ctx.fillStyle = '#667eea';
+            ctx.fillRect(920, 200, 310, 45);
+            ctx.fillStyle = 'white';
+            ctx.font = '14px sans-serif';
+            ctx.fillText('Start Monitoring Current Tab', 1075, 228);
+            
+            // Stats
+            ctx.fillStyle = '#f9fafb';
+            ctx.fillRect(920, 270, 145, 80);
+            ctx.fillRect(1085, 270, 145, 80);
+            
+            ctx.fillStyle = '#6b7280';
+            ctx.font = '12px sans-serif';
+            ctx.fillText('TOTAL REQUESTS', 992, 295);
+            ctx.fillText('DOMAINS', 1157, 295);
+            
+            ctx.fillStyle = '#1f2937';
+            ctx.font = 'bold 28px sans-serif';
+            ctx.fillText('0', 992, 330);
+            ctx.fillText('0', 1157, 330);
+        }
+
+        function drawMonitoring(ctx) {
+            // Active monitoring view
+            drawMainUI(ctx);
+            
+            // Change button state
+            ctx.fillStyle = '#ef4444';
+            ctx.fillRect(920, 200, 310, 45);
+            ctx.fillStyle = 'white';
+            ctx.font = '14px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('Stop Monitoring', 1075, 228);
+            
+            // Update stats
+            ctx.fillStyle = '#f9fafb';
+            ctx.fillRect(920, 270, 145, 80);
+            ctx.fillRect(1085, 270, 145, 80);
+            
+            ctx.fillStyle = '#1f2937';
+            ctx.font = 'bold 28px sans-serif';
+            ctx.fillText('247', 992, 330);
+            ctx.fillText('18', 1157, 330);
+            
+            // Domain list
+            ctx.fillStyle = '#fafafa';
+            ctx.fillRect(920, 370, 310, 210);
+            
+            const domains = ['api.example.com', 'cdn.example.com', 'analytics.example.com'];
+            domains.forEach((domain, i) => {
+                ctx.fillStyle = i === 0 ? '#ede9fe' : 'white';
+                ctx.fillRect(920, 370 + i * 40, 310, 40);
+                
+                ctx.fillStyle = '#1f2937';
+                ctx.font = '13px sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText(domain, 930, 395 + i * 40);
+                
+                ctx.fillStyle = '#667eea';
+                ctx.fillRect(1190, 378 + i * 40, 30, 24);
+                ctx.fillStyle = 'white';
+                ctx.font = '11px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(String(85 - i * 20), 1205, 395 + i * 40);
+            });
+        }
+
+        function drawExport(ctx) {
+            // Export modal
+            drawMonitoring(ctx);
+            
+            // Modal overlay
+            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.fillRect(0, 80, 1280, 720);
+            
+            // Modal content
+            ctx.fillStyle = 'white';
+            ctx.fillRect(340, 200, 600, 400);
+            
+            ctx.fillStyle = '#1f2937';
+            ctx.font = 'bold 24px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('Domain List (Deduplicated)', 640, 250);
+            
+            // Domain list box
+            ctx.fillStyle = '#f9fafb';
+            ctx.fillRect(380, 280, 520, 200);
+            ctx.strokeStyle = '#e5e7eb';
+            ctx.strokeRect(380, 280, 520, 200);
+            
+            // Domain text
+            ctx.fillStyle = '#374151';
+            ctx.font = '13px monospace';
+            ctx.textAlign = 'left';
+            const exportDomains = [
+                'api.example.com',
+                'cdn.example.com', 
+                'analytics.example.com',
+                'fonts.googleapis.com',
+                'static.example.com'
+            ];
+            exportDomains.forEach((domain, i) => {
+                ctx.fillText(domain, 400, 310 + i * 25);
+            });
+            
+            // Buttons
+            ctx.fillStyle = '#667eea';
+            ctx.fillRect(540, 510, 160, 40);
+            ctx.fillStyle = 'white';
+            ctx.font = '14px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('Download JSON', 620, 535);
+            
+            ctx.fillStyle = '#6b7280';
+            ctx.fillRect(720, 510, 160, 40);
+            ctx.fillStyle = 'white';
+            ctx.fillText('Copy to Clipboard', 800, 535);
+        }
+
+        function drawDomains(ctx) {
+            // Domain analysis view
+            drawMainUI(ctx);
+            
+            // Website content
+            ctx.fillStyle = 'white';
+            ctx.fillRect(50, 100, 800, 650);
+            
+            // Mock website
+            ctx.fillStyle = '#667eea';
+            ctx.fillRect(50, 100, 800, 60);
+            
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 24px sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText('Example Website', 80, 140);
+            
+            // Network activity indicators
+            const requests = [
+                { x: 200, y: 300, domain: 'api.example.com' },
+                { x: 400, y: 350, domain: 'cdn.example.com' },
+                { x: 600, y: 400, domain: 'tracking.example.com' },
+                { x: 300, y: 500, domain: 'fonts.googleapis.com' }
+            ];
+            
+            requests.forEach(req => {
+                // Connection line
+                ctx.strokeStyle = '#667eea';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+                ctx.moveTo(req.x, req.y);
+                ctx.lineTo(1075, 400);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                
+                // Request node
+                ctx.fillStyle = '#667eea';
+                ctx.beginPath();
+                ctx.arc(req.x, req.y, 8, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Domain label
+                ctx.fillStyle = '#374151';
+                ctx.font = '11px sans-serif';
+                ctx.fillText(req.domain, req.x - 40, req.y - 15);
+            });
+        }
+
+        function drawBilingual(ctx) {
+            // Split screen showing both languages
+            drawMainUI(ctx);
+            
+            // Chinese version on left
+            ctx.fillStyle = 'white';
+            ctx.fillRect(50, 100, 350, 500);
+            ctx.strokeStyle = '#e5e7eb';
+            ctx.strokeRect(50, 100, 350, 500);
+            
+            // Header
+            const gradient = ctx.createLinearGradient(50, 100, 400, 180);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(50, 100, 350, 80);
+            
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 20px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('🌐 网络监控', 225, 145);
+            
+            // Chinese buttons
+            ctx.fillStyle = '#667eea';
+            ctx.fillRect(70, 200, 310, 45);
+            ctx.fillStyle = 'white';
+            ctx.font = '14px sans-serif';
+            ctx.fillText('开始监控当前标签页', 225, 228);
+            
+            // Language switcher indicator
+            ctx.fillStyle = '#10b981';
+            ctx.fillRect(550, 350, 180, 100);
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 16px sans-serif';
+            ctx.fillText('EN ⇄ 中文', 640, 385);
+            ctx.font = '12px sans-serif';
+            ctx.fillText('Bilingual Support', 640, 410);
+            ctx.fillText('双语支持', 640, 430);
+        }
+
+        // Download function
+        function downloadCanvas(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        // Generate all images on load
+        window.onload = function() {
+            generateSmallPromo();
+            generateLargePromo();
+            generateMarqueePromo();
+        };
+    </script>
+</body>
+</html>

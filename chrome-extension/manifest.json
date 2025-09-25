@@ -1,15 +1,15 @@
 {
   "manifest_version": 3,
-  "name": "NetScope - Network Request Monitor",
-  "version": "1.0",
-  "description": "Monitor and analyze all network requests with domain statistics | 监控网络请求并统计域名",
+  "name": "__MSG_extensionName__",
+  "short_name": "NetScope",
+  "version": "1.0.0",
+  "description": "__MSG_extensionDescription__",
   "default_locale": "en",
   "permissions": [
     "webRequest",
     "storage",
     "tabs",
-    "activeTab",
-    "<all_urls>"
+    "activeTab"
   ],
   "host_permissions": [
     "<all_urls>"
