@@ -1,0 +1,53 @@
+{
+  "extensionName": {
+    "message": "NetScope - Network Request Monitor"
+  },
+  "extensionDescription": {
+    "message": "Monitor and analyze all network requests with domain statistics"
+  },
+  "headerTitle": {
+    "message": "Network Monitor"
+  },
+  "statusReady": {
+    "message": "Ready"
+  },
+  "statusMonitoring": {
+    "message": "Monitoring..."
+  },
+  "statusStopped": {
+    "message": "Monitoring stopped"
+  },
+  "statusDataCleared": {
+    "message": "Data cleared"
+  },
+  "statusCopied": {
+    "message": "Domain list copied to clipboard"
+  },
+  "btnStartMonitor": {
+    "message": "Start Monitoring Current Tab"
+  },
+  "btnStopMonitor": {
+    "message": "Stop Monitoring"
+  },
+  "btnExport": {
+    "message": "Export Domain List"
+  },
+  "btnClear": {
+    "message": "Clear Data"
+  },
+  "statRequests": {
+    "message": "Total Requests"
+  },
+  "statDomains": {
+    "message": "Domains"
+  },
+  "emptyState": {
+    "message": "No data available"
+  },
+  "confirmClear": {
+    "message": "Are you sure you want to clear all data?"
+  },
+  "noDataExport": {
+    "message": "No data to export"
+  }
+}

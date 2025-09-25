@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "NetScope - Network Request Monitor",
+  "version": "1.0",
+  "description": "Monitor and analyze all network requests with domain statistics | 监控网络请求并统计域名",
+  "default_locale": "en",
+  "permissions": [
+    "webRequest",
+    "storage",
+    "tabs",
+    "activeTab",
+    "<all_urls>"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon-16.png",
+      "48": "icon-48.png",
+      "128": "icon-128.png"
+    }
+  },
+  "icons": {
+    "16": "icon-16.png",
+    "48": "icon-48.png",
+    "128": "icon-128.png"
+  }
+}

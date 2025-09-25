@@ -1,0 +1,53 @@
+{
+  "extensionName": {
+    "message": "NetScope - 网络请求监控器"
+  },
+  "extensionDescription": {
+    "message": "监控和分析所有网络请求，提供域名统计功能"
+  },
+  "headerTitle": {
+    "message": "网络监控"
+  },
+  "statusReady": {
+    "message": "准备就绪"
+  },
+  "statusMonitoring": {
+    "message": "正在监控..."
+  },
+  "statusStopped": {
+    "message": "监控已停止"
+  },
+  "statusDataCleared": {
+    "message": "数据已清除"
+  },
+  "statusCopied": {
+    "message": "域名列表已复制到剪贴板"
+  },
+  "btnStartMonitor": {
+    "message": "开始监控当前标签页"
+  },
+  "btnStopMonitor": {
+    "message": "停止监控"
+  },
+  "btnExport": {
+    "message": "导出域名列表"
+  },
+  "btnClear": {
+    "message": "清除数据"
+  },
+  "statRequests": {
+    "message": "总请求数"
+  },
+  "statDomains": {
+    "message": "域名数量"
+  },
+  "emptyState": {
+    "message": "暂无数据"
+  },
+  "confirmClear": {
+    "message": "确定要清除所有数据吗？"
+  },
+  "noDataExport": {
+    "message": "暂无数据可导出"
+  }
+}
