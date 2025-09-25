@@ -16,11 +16,43 @@
             color: white;
             padding: 15px;
             text-align: center;
+            position: relative;
         }
         
         .header h1 {
             margin: 0;
             font-size: 18px;
+        }
+        
+        .lang-switcher {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 2px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 2px;
+        }
+        
+        .lang-btn {
+            padding: 4px 10px;
+            background: transparent;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: background 0.2s;
+            font-weight: 500;
+        }
+        
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .lang-btn.active {
+            background: rgba(255, 255, 255, 0.3);
         }
         
         .controls {
@@ -168,6 +200,10 @@
 <body>
     <div class="header">
         <h1>🌐 <span data-i18n="headerTitle">Network Monitor</span></h1>
+        <div class="lang-switcher">
+            <button class="lang-btn active" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="zh_CN">中文</button>
+        </div>
     </div>
     
     <div class="status" id="status" data-i18n="statusReady">Ready</div>

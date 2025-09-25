@@ -1,15 +1,95 @@
 let isMonitoring = false;
 let currentTabId = null;
+let currentLang = 'en';
+
+// Language messages (fallback for direct access)
+const messages = {
+    en: {
+        headerTitle: "Network Monitor",
+        statusReady: "Ready",
+        statusMonitoring: "Monitoring...",
+        statusStopped: "Monitoring stopped",
+        statusDataCleared: "Data cleared",
+        statusCopied: "Domain list copied to clipboard",
+        btnStartMonitor: "Start Monitoring Current Tab",
+        btnStopMonitor: "Stop Monitoring",
+        btnExport: "Export Domain List",
+        btnClear: "Clear Data",
+        statRequests: "Total Requests",
+        statDomains: "Domains",
+        emptyState: "No data available",
+        confirmClear: "Are you sure you want to clear all data?",
+        noDataExport: "No data to export"
+    },
+    zh_CN: {
+        headerTitle: "网络监控",
+        statusReady: "准备就绪",
+        statusMonitoring: "正在监控...",
+        statusStopped: "监控已停止",
+        statusDataCleared: "数据已清除",
+        statusCopied: "域名列表已复制到剪贴板",
+        btnStartMonitor: "开始监控当前标签页",
+        btnStopMonitor: "停止监控",
+        btnExport: "导出域名列表",
+        btnClear: "清除数据",
+        statRequests: "总请求数",
+        statDomains: "域名数量",
+        emptyState: "暂无数据",
+        confirmClear: "确定要清除所有数据吗？",
+        noDataExport: "暂无数据可导出"
+    }
+};
+
+// Get message with fallback
+function getMessage(key) {
+    // Try Chrome i18n first
+    let message = chrome.i18n.getMessage(key);
+    if (message) return message;
+    
+    // Fallback to local messages
+    return messages[currentLang][key] || messages.en[key] || key;
+}
 
 // i18n localization
 function localizeUI() {
     document.querySelectorAll('[data-i18n]').forEach(element => {
         const messageKey = element.getAttribute('data-i18n');
-        element.textContent = chrome.i18n.getMessage(messageKey);
+        element.textContent = getMessage(messageKey);
+    });
+}
+
+// Switch language
+async function switchLanguage(lang) {
+    currentLang = lang;
+    
+    // Save language preference
+    await chrome.storage.local.set({ language: lang });
+    
+    // Update UI language
+    localizeUI();
+    updateUI();
+    
+    // Update language switcher buttons
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
     });
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+    // Load saved language preference
+    const result = await chrome.storage.local.get('language');
+    currentLang = result.language || chrome.i18n.getUILanguage().replace('-', '_') || 'en';
+    
+    // Ensure valid language
+    if (!['en', 'zh_CN'].includes(currentLang)) {
+        currentLang = 'en';
+    }
+    
+    // Set initial language button state
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === currentLang);
+    });
+    
     // Localize UI
     localizeUI();
     
@@ -27,6 +107,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('exportBtn').addEventListener('click', exportDomains);
     document.getElementById('clearBtn').addEventListener('click', clearData);
     
+    // Language switcher
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const lang = btn.getAttribute('data-lang');
+            switchLanguage(lang);
+        });
+    });
+    
     // 监听数据更新
     chrome.runtime.onMessage.addListener((request) => {
         if (request.action === 'dataUpdated') {
@@ -43,7 +131,7 @@ async function startMonitoring() {
     
     isMonitoring = true;
     updateUI();
-    showStatus(chrome.i18n.getMessage('statusMonitoring'), 'monitoring');
+    showStatus(getMessage('statusMonitoring'), 'monitoring');
 }
 
 async function stopMonitoring() {
@@ -53,7 +141,7 @@ async function stopMonitoring() {
     
     isMonitoring = false;
     updateUI();
-    showStatus(chrome.i18n.getMessage('statusStopped'), 'idle');
+    showStatus(getMessage('statusStopped'), 'idle');
 }
 
 async function loadData() {
@@ -78,7 +166,7 @@ async function loadData() {
             </div>
         `).join('');
     } else {
-        domainList.innerHTML = `<div class="empty-state">${chrome.i18n.getMessage('emptyState')}</div>`;
+        domainList.innerHTML = `<div class="empty-state">${getMessage('emptyState')}</div>`;
     }
     
     updateUI();
@@ -88,7 +176,7 @@ async function exportDomains() {
     const response = await chrome.runtime.sendMessage({ action: 'getData' });
     
     if (response.domains.length === 0) {
-        alert(chrome.i18n.getMessage('noDataExport'));
+        alert(getMessage('noDataExport'));
         return;
     }
     
@@ -118,7 +206,7 @@ async function exportDomains() {
     
     // 复制到剪贴板
     document.execCommand('copy');
-    showStatus(chrome.i18n.getMessage('statusCopied'), 'monitoring');
+    showStatus(getMessage('statusCopied'), 'monitoring');
     
     // 3秒后恢复
     setTimeout(() => {
@@ -129,10 +217,10 @@ async function exportDomains() {
 }
 
 async function clearData() {
-    if (confirm(chrome.i18n.getMessage('confirmClear'))) {
+    if (confirm(getMessage('confirmClear'))) {
         await chrome.runtime.sendMessage({ action: 'clearData' });
         loadData();
-        showStatus(chrome.i18n.getMessage('statusDataCleared'), 'idle');
+        showStatus(getMessage('statusDataCleared'), 'idle');
     }
 }
 
@@ -144,12 +232,12 @@ function updateUI() {
     if (isMonitoring) {
         startBtn.style.display = 'none';
         stopBtn.style.display = 'block';
-        status.textContent = chrome.i18n.getMessage('statusMonitoring');
+        status.textContent = getMessage('statusMonitoring');
         status.className = 'status monitoring';
     } else {
         startBtn.style.display = 'block';
         stopBtn.style.display = 'none';
-        status.textContent = chrome.i18n.getMessage('statusReady');
+        status.textContent = getMessage('statusReady');
         status.className = 'status idle';
     }
 }
