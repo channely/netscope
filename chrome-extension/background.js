@@ -1,4 +1,4 @@
-let monitoringTabId = null;
+let isMonitoring = false;
 let requests = [];
 let domains = new Map();
 
@@ -6,7 +6,7 @@ let domains = new Map();
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.action) {
     case 'startMonitoring':
-      startMonitoring(request.tabId);
+      startMonitoring();
       sendResponse({ success: true });
       break;
     case 'stopMonitoring':
@@ -21,7 +21,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           count: reqs.length,
           requests: reqs
         })),
-        isMonitoring: monitoringTabId !== null
+        isMonitoring: isMonitoring
       });
       break;
     case 'clearData':
@@ -32,33 +32,31 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   return true;
 });
 
-function startMonitoring(tabId) {
-  monitoringTabId = tabId;
+function startMonitoring() {
+  isMonitoring = true;
   requests = [];
   domains.clear();
   
-  // 监听网络请求
+  // 监听所有网络请求（不限制特定标签页）
   chrome.webRequest.onBeforeRequest.addListener(
     captureRequest,
-    { tabId: monitoringTabId, urls: ["<all_urls>"] },
+    { urls: ["<all_urls>"] },
     ["requestBody"]
   );
   
   chrome.webRequest.onCompleted.addListener(
     captureResponse,
-    { tabId: monitoringTabId, urls: ["<all_urls>"] }
+    { urls: ["<all_urls>"] }
   );
 }
 
 function stopMonitoring() {
-  monitoringTabId = null;
+  isMonitoring = false;
   chrome.webRequest.onBeforeRequest.removeListener(captureRequest);
   chrome.webRequest.onCompleted.removeListener(captureResponse);
 }
 
 function captureRequest(details) {
-  if (details.tabId !== monitoringTabId) return;
-  
   try {
     const url = new URL(details.url);
     const domain = url.hostname;
@@ -69,7 +67,8 @@ function captureRequest(details) {
       type: details.type,
       method: details.method,
       timestamp: details.timeStamp,
-      requestId: details.requestId
+      requestId: details.requestId,
+      tabId: details.tabId
     };
     
     requests.push(requestData);

@@ -1,5 +1,4 @@
 let isMonitoring = false;
-let currentTabId = null;
 let currentLang = 'en';
 
 // Language messages (fallback for direct access)
@@ -100,9 +99,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Localize UI
     localizeUI();
     
-    // 获取当前标签页
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    currentTabId = tab.id;
+    // 注意：不再需要获取当前标签页ID，background.js会自动处理活动标签页
     
     // 初始化UI
     updateUI();
@@ -132,8 +129,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function startMonitoring() {
     await chrome.runtime.sendMessage({
-        action: 'startMonitoring',
-        tabId: currentTabId
+        action: 'startMonitoring'
+        // 不再传递tabId，background.js会自动监听所有请求
     });
     
     isMonitoring = true;
